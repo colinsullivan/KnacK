@@ -11,7 +11,7 @@
  *  @class      Base class for all aesthetic objects.
  *  
  **/
-public class Aesthetic {
+public class Aesthetic extends Event {
     /**
      *  Name of this aesthetic
      **/
@@ -28,7 +28,9 @@ public class Aesthetic {
      *  set name
      **/
     fun string name(string aName) {
-        return aName => this._name;
+        aName => this._name;
+        this.broadcast();
+        return aName;
     }
 
     /**
@@ -49,9 +51,4 @@ public class Aesthetic {
     fun float value(float aValue) {
         return aValue => _value;
     }
-
-    /**
-     *  Change event for when data changes.
-     **/
-    Event _change;
 }
