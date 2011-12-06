@@ -36,7 +36,7 @@ public class Aesthetic extends Event {
     /**
      *  Value of this aesthetic dimension [0 - 1]
      **/
-    float _value;
+    0.0 => float _value;
 
     /**
      *  Get value
@@ -49,6 +49,8 @@ public class Aesthetic extends Event {
      *  Set value
      **/
     fun float value(float aValue) {
-        return aValue => _value;
+        aValue => _value;
+        this.broadcast();
+        return aValue;
     }
 }
