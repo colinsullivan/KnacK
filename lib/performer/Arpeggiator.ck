@@ -34,6 +34,9 @@ public class Arpeggiator extends Performer {
                     );
                 }
             }
+            else {
+                me.yield();
+            }
         }
     }
 }

@@ -33,11 +33,12 @@ a.name("happy");
 
 // Performer p is now watching the "happy" aesthetic
 p.watch(a);
+me.yield();
 
 // Composition
 1::second => now;
 a.broadcast();
-me.yield();
+1::second => now;
 
 /**
  *  A `Performer` should be informed whenever an `Aesthetic` it is 
@@ -54,8 +55,9 @@ class TestReactPerformer extends TestPerformer {
 }
 TestReactPerformer reactPerformer;
 reactPerformer.watch(a);
+me.yield();
 
 1::second => now;
 a.value(0.5);
-me.yield();
+1::second => now;
 

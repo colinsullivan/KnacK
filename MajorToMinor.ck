@@ -19,14 +19,23 @@ Bubbly b;
 MajorToMinorArpeggiator a;
 a.instrument(b);
 a.speed(0.1::second);
-a.octave(1);
+a.octave(4);
+
+// [47, 44, 41, 38, 35, 32, 29, 26] @=> int descendingMinorThirds[];
+// a.pitches_midi(descendingMinorThirds);
 
 Aesthetic happy;
 happy.name("happy");
-happy.value(1.0);
 
 a.watch(happy);
+me.yield();
 
-// Arpeggiate in major for 3 seconds
 spork ~ a.play();
+
+<<< "setting happy value to 1.0" >>>;
+happy.value(1.0);
+3::second => now;
+
+<<< "setting happy value to 0.1" >>>;
+happy.value(0.1);
 3::second => now;

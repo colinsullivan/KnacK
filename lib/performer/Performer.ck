@@ -43,6 +43,10 @@ public class Performer {
      **/
     float mPitches[];
 
+    10 => int _nullWatchingPointers;
+    Aesthetic @ _watching[10];
+
+
     /**
      *  Transpose all pitches by the given octave.
      **/
@@ -113,9 +117,11 @@ public class Performer {
         newPitches @=> mPitches;
     }
 
-        fun void _watch(Aesthetic a) {
+    fun void _watch(Aesthetic a) {
         a => now; // When a does something
-        aesthetic_reaction(a); //react
+        spork ~ aesthetic_reaction(a); //react
+        // Handle event next time
+        _watch(a);
     }
 
     fun void watch(Aesthetic a) {
@@ -123,12 +129,24 @@ public class Performer {
         /**
          *  Add a to the list of aesthetics we are watching.
          **/
-        // a => _watching[];
+        a @=> _watching[a.name()];
+
+        1 -=> _nullWatchingPointers;
+
+        if(_nullWatchingPointers == 0) {
+            _watching.size() => _nullWatchingPointers;
+            _watching.size(_watching.size()*2);
+        }
+
+        // aesthetic_reaction(a);
 
         /**
          *  Handle event when it comes in
          **/
         spork ~ _watch(a);
+    }
+
+    fun void unwatch(Aesthetic a) {
         
     }
 
@@ -144,7 +162,4 @@ public class Performer {
         return;
     }
 
-    10 => int _watchingSize;
-    0 => int _watchingLast;
-    Aesthetic @ _watching[_watchingSize];
 }
