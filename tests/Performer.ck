@@ -19,12 +19,14 @@ fun void starting_test(string testName, string desiredResult) {
  *  A `Performer` should be able to watch an `Aesthetic` object for broadcasts.
  **/
 
-starting_test("Performer watch aesthetic", "TestPerformer.aesthetic_reaction should be called in 1::second.");
+starting_test("Performer watch aesthetic", "TestPerformer.callback(Aesthetic) should be called in 1::second.");
 class TestPerformer extends Performer {
-    fun void aesthetic_reaction(Aesthetic a) {
-        <<< "\t", "TestPerformer.aesthetic_reaction called" >>>;
-        return;
+    class TestPerformerAestheticCallbacks extends Performer.PerformerAestheticCallbacks {
+        fun void callback(Aesthetic a) {
+            <<< "\t", "TestPerformer.callback(Aesthetic)" >>>;
+        }
     }
+    new TestPerformerAestheticCallbacks @=> _aestheticCallbacks;
 }
 TestPerformer p;
 
@@ -46,18 +48,28 @@ a.broadcast();
  **/
 starting_test("Performer react to happy value changing", "Performer should announce happy value in 1::second");
 class TestReactPerformer extends TestPerformer {
-    // When an aesthetic changes
-    fun void aesthetic_reaction(Aesthetic a) {
-        if(a.name() == "happy") {
-            <<< "\t", "`happy` value changed to: ", a.value(), "\n" >>>;
+    // When an aesthetic changes, use these callbacks
+    class TestReactPerformerAestheticCallbacks extends Performer.PerformerAestheticCallbacks {
+        fun void callback(DissonantAesthetic a) {
+            a => now;
+            <<< "\t", "TestReactPerformer.callback(DissonantAesthetic)" >>>;
+            // <<< "\t", "a.value(): ", a.value() >>>;
+            callback(a);
         }
     }
+    new TestReactPerformerAestheticCallbacks @=> _aestheticCallbacks;
 }
+
+class DissonantAesthetic extends Aesthetic {
+    "dissonant" => _name;
+}
+
+DissonantAesthetic dissonance;
 TestReactPerformer reactPerformer;
-reactPerformer.watch(a);
+reactPerformer._aestheticCallbacks.callback(dissonance);
 me.yield();
 
 1::second => now;
-a.value(0.5);
+dissonance.value(0.5);
 1::second => now;
 

@@ -43,8 +43,29 @@ public class Performer {
      **/
     float mPitches[];
 
+    /**
+     *  `Aesthetic` objects we are currently watching.
+     **/
     10 => int _nullWatchingPointers;
     Aesthetic @ _watching[10];
+
+    /**
+     *  @class      Function obj. with callbacks
+     *  for various `Aesthetic` types.
+     **/
+    public class PerformerAestheticCallbacks {
+        fun void callback(Aesthetic a) {
+            <<< "PerformerAestheticCallbacks.callback(Aesthetic)" >>>;
+        }
+    };
+
+    /**
+     *  Pointer to instance of `PerformerAestheticCallbacks`
+     *  (or subclass).  Subclasses should instantiate proper
+     *  type.
+     **/
+    new PerformerAestheticCallbacks @=> PerformerAestheticCallbacks @ _aestheticCallbacks;
+
 
 
     /**
@@ -119,7 +140,7 @@ public class Performer {
 
     fun void _watch(Aesthetic a) {
         a => now; // When a does something
-        spork ~ aesthetic_reaction(a); //react
+        spork ~ _aestheticCallbacks.callback(a); //react
         // Handle event next time
         _watch(a);
     }
@@ -149,17 +170,4 @@ public class Performer {
     fun void unwatch(Aesthetic a) {
         
     }
-
-    /**
-     *  Override this in subclasses using polymorphic
-     *  arguments as handlers for different subclasses
-     *  of `Aesthetic`.
-     **/
-    fun void aesthetic_reaction(Aesthetic a) {
-        <<< "\n", "Performer.aestheticReaction:" >>>;
-        <<< "\ta.name(): ", a.name() >>>;
-
-        return;
-    }
-
 }
