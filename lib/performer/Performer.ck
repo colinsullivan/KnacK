@@ -55,7 +55,7 @@ public class Performer {
      **/
     public class PerformerAestheticCallbacks {
         fun void callback(Aesthetic a) {
-            <<< "PerformerAestheticCallbacks.callback(Aesthetic)" >>>;
+            <<< "\t", "PerformerAestheticCallbacks.callback(Aesthetic)" >>>;
         }
     };
 
