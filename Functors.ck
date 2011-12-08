@@ -26,25 +26,33 @@ Output:
  **/
 
 
-
-
-/**
- *  @class      Base abstract functor class.
- *
- *  This should be used for creating callbacks for
- *  events.  Ideally, subclasses of this would 
- *  be able to override the `callback` method with 
- *  different `Event` types.
- **/
-class EventCallbacks {
-    fun void callback(Event a) {
-        <<< "\t", "EventCallbacks._eventCallbacks.callback(Event)" >>>;
-    }
-    // fun void callback(HappyEvent a) {
-    //     <<< "\t", "EventCallbacks._eventCallbacks.callback(HappyEvent)" >>>;
-    // }
-
+class BaseEvent extends Event {
 }
+
+class BaseEventCallback {
+    fun void call(BaseEvent e) {
+        
+    }
+}
+
+
+// *
+//  *  @class      Base abstract functor class.
+//  *
+//  *  This should be used for creating callbacks for
+//  *  events.  Ideally, subclasses of this would 
+//  *  be able to override the `callback` method with 
+//  *  different `Event` types.
+//  *
+// class EventCallbacks {
+//     fun void callback(Event a) {
+//         <<< "\t", "EventCallbacks._eventCallbacks.callback(Event)" >>>;
+//     }
+//     // fun void callback(HappyEvent a) {
+//     //     <<< "\t", "EventCallbacks._eventCallbacks.callback(HappyEvent)" >>>;
+//     // }
+
+// }
 
 /**
  *  @class      Base class for an event handler.
@@ -55,21 +63,30 @@ public class EventWatcher {
      *  (or subclass).  Subclasses should instantiate proper
      *  type.
      **/
-    new EventCallbacks @=> EventCallbacks @ _eventCallbacks;
+    // new EventCallbacks @=> EventCallbacks @ _eventCallbacks;
 
-    fun void watch(Event a) {
-        a => now; // When a fires
-        // Handle event
-        spork ~ _eventCallbacks.callback(a); //react
-        // Handle event again next time
-        watch(a);
+    // fun void watch(Event a) {
+    //     a => now; // When a fires
+    //     // Handle event
+    //     spork ~ _eventCallbacks.callback(a); //react
+    //     // Handle event again next time
+    //     watch(a);
+    // }
+
+    fun void bind(BaseEvent e, BaseEventCallback cb) {
+        e => now;
+
+        cb.call(e);
+
+        bind(e, cb);
     }
 }
 
+
 /**
- *  @class      `Event` subclass for example.
+ *  @class      `BaseEvent` subclass for example.
  **/
-class HappyEvent extends Event {
+class HappyEvent extends BaseEvent {
 
 }
 
@@ -83,20 +100,28 @@ class MyWatcher extends EventWatcher {
      *  Overloaded `callback` method is used for
      *  different types of events.
      **/
-    class MyCallbacks extends EventCallbacks {
-        fun void callback(HappyEvent a) {
-            <<< "\t", "MyWatcher._eventCallbacks.callback(HappyEvent)" >>>;
+    // class MyCallbacks extends EventCallbacks {
+    //     fun void callback(HappyEvent a) {
+    //         <<< "\t", "MyWatcher._eventCallbacks.callback(HappyEvent)" >>>;
+    //     }
+    // }
+    // new MyCallbacks @=> _eventCallbacks;
+
+    class MyCallback extends BaseEventCallback {
+        fun void call(BaseEvent e) {
+            e $ HappyEvent @=> HappyEvent @ e;
+            <<< "\t", "MyWatcher.happyCallback.call(BaseEvent)" >>>;
         }
     }
-    new MyCallbacks @=> _eventCallbacks;
+    MyCallback happyCallback;
 
-    fun void watch(HappyEvent a) {
-        a => now; // When a fires
-        // Handle event
-        spork ~ _eventCallbacks.callback(a); //react
-        // Handle event again next time
-        watch(a);
-    }
+    // fun void watch(HappyEvent a) {
+    //     a => now; // When a fires
+    //     // Handle event
+    //     spork ~ _eventCallbacks.callback(a); //react
+    //     // Handle event again next time
+    //     watch(a);
+    // }
 
 }
 
@@ -104,9 +129,9 @@ class MyWatcher extends EventWatcher {
 
 MyWatcher c;
 HappyEvent a;
-spork ~ c.watch(a);
+spork ~ c.bind(a, c.happyCallback);
 
-<<< "\n", "MyWatcher._eventCallbacks.callback(HappyEvent) should be called in one second:" >>>;
+<<< "\n", "MyWatcher.happyCallback.callback(HappyEvent) should be called in one second:" >>>;
 1::second => now;
 a.broadcast();
 1::second => now;

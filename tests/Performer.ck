@@ -19,14 +19,14 @@ fun void starting_test(string testName, string desiredResult) {
  *  A `Performer` should be able to watch an `Aesthetic` object for broadcasts.
  **/
 
-starting_test("Performer watch aesthetic", "TestPerformer.callback(Aesthetic) should be called in 1::second.");
+starting_test("Performer watch aesthetic", "TestPerformer.testCallback.call(Aesthetic) should be called in 1::second.");
 class TestPerformer extends Performer {
-    class TestPerformerAestheticCallbacks extends Performer.PerformerAestheticCallbacks {
-        fun void callback(Aesthetic a) {
-            <<< "\t", "TestPerformer.callback(Aesthetic)" >>>;
+    class TestAestheticCallback extends Aesthetic.AestheticCallback {
+        fun void call(Aesthetic a) {
+            <<< "\t", "TestPerformer.testCallback.call(Aesthetic)" >>>;
         }
     }
-    new TestPerformerAestheticCallbacks @=> _aestheticCallbacks;
+    TestAestheticCallback testCallback;
 }
 TestPerformer p;
 
@@ -34,7 +34,7 @@ Aesthetic a;
 a.name("happy");
 
 // Performer p is now watching the "happy" aesthetic
-p.watch(a);
+a.bind(p.testCallback);
 me.yield();
 
 // Composition
@@ -54,22 +54,20 @@ class DissonantAesthetic extends Aesthetic {
 
 class TestReactPerformer extends TestPerformer {
     // When an aesthetic changes, use these callbacks
-    class TestReactPerformerAestheticCallbacks extends Performer.PerformerAestheticCallbacks {
-        fun void callback(DissonantAesthetic a) {
-            a => now;
-            <<< "\t", "TestReactPerformer.callback(DissonantAesthetic)" >>>;
+    class DissonantCallback extends Aesthetic.AestheticCallback {
+        fun void call(Aesthetic a) {
+            a $ DissonantAesthetic @=> a;
+
+            <<< "\t", "TestReactPerformer.dissonantCallback.call(DissonantAesthetic)" >>>;
             <<< "\t", "a.value(): ", a.value() >>>;
-            callback(a);
         }
     }
-    null @=> _aestheticCallbacks;
-    TestReactPerformerAestheticCallbacks @ _aestheticCallbacks;
+    DissonantCallback dissonantCallback;
 }
 
 DissonantAesthetic dissonance;
 TestReactPerformer reactPerformer;
-// reactPerformer.watch(dissonance);
-reactPerformer._aestheticCallbacks.callback(dissonance);
+dissonance.bind(reactPerformer.dissonantCallback);
 me.yield();
 
 1::second => now;

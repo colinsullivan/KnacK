@@ -27,7 +27,7 @@ a.octave(4);
 Aesthetic happy;
 happy.name("happy");
 
-a.watch(happy);
+happy.bind(a.happyCallback);
 me.yield();
 
 spork ~ a.play();

@@ -53,4 +53,34 @@ public class Aesthetic extends Event {
         this.broadcast();
         return aValue;
     }
+
+    /**
+     *  @class      Base callback for handling an Aesthetic event broadcast.
+     **/
+    public class AestheticCallback {
+        fun void call(Aesthetic a) {
+            
+        }
+    }
+
+
+    /**
+     *  Bind method used by the outside world to bind a callback
+     *  function object to this Aesthetic.
+     **/
+    fun void bind(AestheticCallback cb) {
+        spork ~ _bind(cb);
+    }
+
+    /**
+     *  Internal bind method which is sporked by above.
+     **/
+    fun void _bind(AestheticCallback cb) {
+        this => now;
+
+        cb.call(this);
+
+        _bind(cb);
+    }
+
 }

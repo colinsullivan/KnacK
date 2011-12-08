@@ -44,31 +44,6 @@ public class Performer {
     float mPitches[];
 
     /**
-     *  `Aesthetic` objects we are currently watching.
-     **/
-    10 => int _nullWatchingPointers;
-    Aesthetic @ _watching[10];
-
-    /**
-     *  @class      Function obj. with callbacks
-     *  for various `Aesthetic` types.
-     **/
-    public class PerformerAestheticCallbacks {
-        fun void callback(Aesthetic a) {
-            <<< "\t", "PerformerAestheticCallbacks.callback(Aesthetic)" >>>;
-        }
-    };
-
-    /**
-     *  Pointer to instance of `PerformerAestheticCallbacks`
-     *  (or subclass).  Subclasses should instantiate proper
-     *  type.
-     **/
-    new PerformerAestheticCallbacks @=> PerformerAestheticCallbacks @ _aestheticCallbacks;
-
-
-
-    /**
      *  Transpose all pitches by the given octave.
      **/
     fun void octave(int aOctaveValue) {
@@ -136,38 +111,5 @@ public class Performer {
      **/
     fun void pitches(float newPitches[]) {
         newPitches @=> mPitches;
-    }
-
-    fun void _watch(Aesthetic a) {
-        a => now; // When a does something
-        spork ~ _aestheticCallbacks.callback(a); //react
-        // Handle event next time
-        _watch(a);
-    }
-
-    fun void watch(Aesthetic a) {
-
-        /**
-         *  Add a to the list of aesthetics we are watching.
-         **/
-        a @=> _watching[a.name()];
-
-        1 -=> _nullWatchingPointers;
-
-        if(_nullWatchingPointers == 0) {
-            _watching.size() => _nullWatchingPointers;
-            _watching.size(_watching.size()*2);
-        }
-
-        // aesthetic_reaction(a);
-
-        /**
-         *  Handle event when it comes in
-         **/
-        spork ~ _watch(a);
-    }
-
-    fun void unwatch(Aesthetic a) {
-        
     }
 }
