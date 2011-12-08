@@ -66,7 +66,7 @@ public class Bubbly extends Instrument {
     d.max(2::second);
     d.delay(.33::second);
 
-    fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
         imp.next(1.0);
 
         attackLife.keyOn();

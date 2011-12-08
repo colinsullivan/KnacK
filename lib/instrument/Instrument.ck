@@ -54,8 +54,8 @@ public class Instrument extends UGen {
         return -1.0;
     }
 
-    fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
-        Helpers.abstract_error("Instrument", "playNote");
+    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+        Helpers.abstract_error("Instrument", "play_note");
         return;
     }
 

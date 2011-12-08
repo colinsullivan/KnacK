@@ -153,7 +153,7 @@ public class Performer {
     /**
      *  Override this in subclasses and analyze `a.name()`
      *  to determine what actions to take.  TODO: This can
-     *  probably be done in a cleaner way with function
+     *  probably be done in a cleaner way with functors
      *  but I'm not sure how.
      **/
     fun void aesthetic_reaction(Aesthetic a) {

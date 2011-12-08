@@ -13,6 +13,6 @@
  **/
 public class Helpers {
     fun static void abstract_error(string className, string methodName) {
-        <<< "\n", "WARNING: Abstract method `"+className+"."+methodName+"` called.", "\n" >>>;
+        <<< "\n", "WARNING:\tAbstract method `"+className+"."+methodName+"` called.">>>;
     }
 }

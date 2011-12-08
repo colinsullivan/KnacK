@@ -26,7 +26,7 @@ public class Arpeggiator extends Performer {
                     mPitches[i]*pitchMultiplier => float freq;
 
                     instr.freq(freq);
-                    instr.playNote(
+                    instr.play_note(
                         0.5,
                         noteOnDuration,
                         0.5,
