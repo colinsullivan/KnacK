@@ -151,9 +151,10 @@ public class Performer {
     }
 
     /**
-     *  Override this in subclasses using polymorphic
-     *  arguments as handlers for different subclasses
-     *  of `Aesthetic`.
+     *  Override this in subclasses and analyze `a.name()`
+     *  to determine what actions to take.  TODO: This can
+     *  probably be done in a cleaner way with function
+     *  but I'm not sure how.
      **/
     fun void aesthetic_reaction(Aesthetic a) {
         <<< "\n", "Performer.aestheticReaction:" >>>;
