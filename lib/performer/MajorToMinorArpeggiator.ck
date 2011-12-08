@@ -14,8 +14,12 @@
  **/
 public class MajorToMinorArpeggiator extends Arpeggiator {
     
-    fun void aesthetic_reaction(Aesthetic a) {
-        if(a.name() == "happy") {
+    /**
+     *  @class      Inline functor for reacting to "happy"
+     *  @extends    Aesthetic.AestheticCallback
+     **/
+    class HappyCallback extends Aesthetic.AestheticCallback {
+        fun void call(Aesthetic a) {
             if(a.value() <= 0.5) {
                 <<< "minor pitches" >>>;
                 // minor
@@ -25,7 +29,8 @@ public class MajorToMinorArpeggiator extends Arpeggiator {
                 <<< "major pitches" >>>;
                 // major
                 this.pitches_midi([12, 14, 16, 17, 19, 21, 23, 24]);
-            }
+            }            
         }
     }
+    HappyCallback happyCallback;
 }
