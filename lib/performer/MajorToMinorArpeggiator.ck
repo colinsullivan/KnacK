@@ -23,15 +23,14 @@ public class MajorToMinorArpeggiator extends Arpeggiator {
             if(a.value() <= 0.5) {
                 <<< "minor pitches" >>>;
                 // minor
-                performer.pitches_midi([9, 11, 12, 14, 16, 17, 21, 23]);
+                this.pitches_midi([9, 11, 12, 14, 16, 17, 21, 23]);
             }
             else {
                 <<< "major pitches" >>>;
                 // major
-                performer.pitches_midi([12, 14, 16, 17, 19, 21, 23, 24]);
+                this.pitches_midi([12, 14, 16, 17, 19, 21, 23, 24]);
             }            
         }
     }
     HappyCallback happyCallback;
-    happyCallback.performer(this);
 }

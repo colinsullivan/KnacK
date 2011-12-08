@@ -58,16 +58,11 @@ public class Aesthetic extends Event {
      *  @class      Base callback for handling an Aesthetic event broadcast.
      **/
     public class AestheticCallback {
-        Performer @ performer;
-
         fun void call(Aesthetic a) {
             
         }
-
-        fun void performer(Performer aPerformer) {
-            performer @=> aPerformer;
-        }
     }
+
 
     /**
      *  Bind method used by the outside world to bind a callback
