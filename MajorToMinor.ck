@@ -7,7 +7,6 @@
  *              Licensed under the MIT license.
  **/
 
-
 /**
  *  Our Bubbly Synth
  **/
