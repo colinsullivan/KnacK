@@ -43,6 +43,10 @@ public class Performer {
      **/
     float mPitches[];
 
+    10 => int _nullWatchingPointers;
+    Aesthetic @ _watching[10];
+
+
     /**
      *  Transpose all pitches by the given octave.
      **/
@@ -112,4 +116,51 @@ public class Performer {
     fun void pitches(float newPitches[]) {
         newPitches @=> mPitches;
     }
+
+    fun void _watch(Aesthetic a) {
+        a => now; // When a does something
+        spork ~ aesthetic_reaction(a); //react
+        // Handle event next time
+        _watch(a);
+    }
+
+    fun void watch(Aesthetic a) {
+
+        /**
+         *  Add a to the list of aesthetics we are watching.
+         **/
+        a @=> _watching[a.name()];
+
+        1 -=> _nullWatchingPointers;
+
+        if(_nullWatchingPointers == 0) {
+            _watching.size() => _nullWatchingPointers;
+            _watching.size(_watching.size()*2);
+        }
+
+        // aesthetic_reaction(a);
+
+        /**
+         *  Handle event when it comes in
+         **/
+        spork ~ _watch(a);
+    }
+
+    fun void unwatch(Aesthetic a) {
+        
+    }
+
+    /**
+     *  Override this in subclasses and analyze `a.name()`
+     *  to determine what actions to take.  TODO: This can
+     *  probably be done in a cleaner way with function
+     *  but I'm not sure how.
+     **/
+    fun void aesthetic_reaction(Aesthetic a) {
+        <<< "\n", "Performer.aestheticReaction:" >>>;
+        <<< "\ta.name(): ", a.name() >>>;
+
+        return;
+    }
+
 }
