@@ -42,7 +42,8 @@ class OWSCollage extends Conductor {
             
         }
     }
-    this.add_movement(new Intro);
+    Intro intro;
+    this.add_movement(intro);
 }
 OWSCollage piece;
 piece.play();
