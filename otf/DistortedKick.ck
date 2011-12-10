@@ -14,7 +14,7 @@
 public class DistortedKick extends Instrument {
     
     SndBuf clip;
-    
+
     for(0 => int i; i < mChannels; i++) {
         clip => this.outputs[i];
     }
@@ -22,7 +22,6 @@ public class DistortedKick extends Instrument {
     clip.read("/Users/colin/Documents/Stanford/Courses/220a/hwfinal/otf/DistortedKick.aif");
 
     fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
-        <<< "DistortedKick.play_note" >>>;
         clip.pos(0);
         clip.length() => now;
     }

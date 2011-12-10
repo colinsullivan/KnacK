@@ -20,6 +20,9 @@ public class Conductor {
      **/
     dur _duration;
 
+    float _bpm;
+    dur quarterNote;
+
     /**
      *  List of movements in this piece.
      **/
@@ -42,11 +45,53 @@ public class Conductor {
         return _duration;
     }
 
+    fun float bpm() {
+        return _bpm;
+    }
+    fun float bpm(float aBpm) {
+        aBpm => _bpm;
+
+        (1/_bpm)*1::minute => quarterNote;
+
+        return _bpm;
+    }
+
+    /**
+     *  Determine if the movement durations are properly entered.
+     **/
+    fun void pre_play() {
+        0 => float allLengths;
+        for(0 => int i; i < _numMovements; i++) {
+            _movements[i]._length +=> allLengths;
+        }
+
+        if(allLengths > 1) {
+            <<< "\n", "ERROR: Lengths of movements do not add up to 1" >>>;
+            me.exit();
+        }
+    }
+
+
     /**
      *  Begin playing the piece.
      **/
+    // fun void _play() {        
+    // }
     fun void play() {
-        Helpers.abstract_error("Conductor", "play");
+        this.pre_play();
+
+        <<< "Conductor.play():", "\n\t", "Playing all movements in order by default" >>>;
+
+        for(0 => int i; i < _numMovements; i++) {
+            _movements[i].duration() => dur movementDuration;
+
+            <<< "Conductor.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration >>>;
+            _movements[i].play();
+            movementDuration => now;
+        }
+        <<< "Conductor.play():", "\n\t", "Finished playing all movements" >>>;
+
+        // this.duration() => now;
     }
 
     /**
@@ -82,6 +127,10 @@ public class Conductor {
          **/
         dur _duration;
 
+        fun dur duration() {
+            return _duration;
+        }
+
         /**
          *  Should be called whenever duration of conductor or
          *  length of movement has changed, as well as when
@@ -91,8 +140,14 @@ public class Conductor {
             this._conductor._duration*this._length => this._duration;
         }
 
+        // fun void _play() {
+            
+        // }
+
         fun void play() {
             Helpers.abstract_error("Conductor.Movement", "play");
+            // spork ~ this._play();
+            // this.duration() => now;
         }
     }
 
@@ -105,5 +160,13 @@ public class Conductor {
         1 +=> _numMovements;
         return aMovement;
     }
+
+    /**
+     *  Append a new performer to the list of performers
+     **/
+    // fun Performer add_performer(Performer aPerformer) {
+    //     aPerformer.conductor(this);
+    //     return aPerformer;
+    // }
 
 }

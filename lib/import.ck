@@ -9,6 +9,8 @@
 
 Machine.add("Helpers.ck");
 
+// Machine.add("performer/PerformerBase.ck");
+
 Machine.add("aesthetic/Aesthetic.ck");
 Machine.add("aesthetic/Happy.ck");
 

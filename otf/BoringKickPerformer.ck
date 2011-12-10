@@ -21,13 +21,10 @@ public class BoringKickPerformer extends Performer {
      **/
     fun void play() {
         <<< "BoringKickPerformer.play" >>>;
-        
         while(true) {
-            60 => float TEMPO;
-            (1/TEMPO)*1::minute => dur QUARTER_NOTE;
-
             spork ~ kick.play_note(0.0, 0::second, 0.0, 0::second);
-            1*QUARTER_NOTE => now;
+
+            1*this.conductor().quarterNote => now;
         }
     }
 }

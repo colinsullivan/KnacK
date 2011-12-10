@@ -43,6 +43,22 @@ public class Performer {
      **/
     float mPitches[];
 
+    /**
+     *  Array of pitch classes to be used by the 
+     *  performer.
+     **/
+    int _scale[];
+
+    fun int[] scale() {
+        return _scale;
+    }
+
+    fun int[] scale(int aScale[]) {
+        aScale @=> _scale;
+
+        return aScale;
+    }
+
     10 => int _nullWatchingPointers;
     Aesthetic @ _watching[10];
 
@@ -60,7 +76,25 @@ public class Performer {
     fun void instrument(Instrument anInstrument) {
         anInstrument @=> instr;
     }
-    
+
+    /**
+     *  Reference to `Conductor` instance that is
+     *  controlling this `Performer`.
+     **/
+    Conductor @ _conductor;
+
+    /**
+     *  Set the `Conductor` instance that controls
+     *  this `Performer`.
+     **/
+    fun Conductor conductor(Conductor aConductor) {
+        aConductor @=> this._conductor;
+        return aConductor;
+    }
+
+    fun Conductor conductor() {
+        return _conductor;
+    }
 
     /**
      *  Set the duration of the playing notes.
@@ -91,31 +125,31 @@ public class Performer {
      *  @param  midiPitches  The MIDI note values to
      *  arpeggiate over.
      **/
-    fun void pitches_midi(int midiPitches[]) {
-        midiPitches.size() => int numPitches;
+    // fun void pitches_midi(int midiPitches[]) {
+    //     midiPitches.size() => int numPitches;
 
-        // If amount of pitches is different from what is currently
-        // allocated
-        if(mPitches == null || numPitches != mPitches.size()) {
-            // Allocate a new array
-            new float [numPitches] @=> mPitches;
-            // newPitches @=> mPitches;
-        }
+    //     // If amount of pitches is different from what is currently
+    //     // allocated
+    //     if(mPitches == null || numPitches != mPitches.size()) {
+    //         // Allocate a new array
+    //         new float [numPitches] @=> mPitches;
+    //         // newPitches @=> mPitches;
+    //     }
 
-        for(0 => int i; i < mPitches.size(); i++) {
-            Std.mtof(midiPitches[i]) => mPitches[i];
-        }
-    }
+    //     for(0 => int i; i < mPitches.size(); i++) {
+    //         Std.mtof(midiPitches[i]) => mPitches[i];
+    //     }
+    // }
 
-    /**
-     *  Set the pitches for this performer via an array
-     *  of pitches in Hz.
-     *
-     *  @param  newPitches  The pitches to use (in Hz).
-     **/
-    fun void pitches(float newPitches[]) {
-        newPitches @=> mPitches;
-    }
+    // /**
+    //  *  Set the pitches for this performer via an array
+    //  *  of pitches in Hz.
+    //  *
+    //  *  @param  newPitches  The pitches to use (in Hz).
+    //  **/
+    // fun void pitches(float newPitches[]) {
+    //     newPitches @=> mPitches;
+    // }
 
     fun void _watch(Aesthetic a) {
         a => now; // When a does something
