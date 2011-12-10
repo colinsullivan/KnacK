@@ -18,10 +18,11 @@ public class Conductor {
     /**
      *  Overall duration of the piece
      **/
-    dur _duration;
+    0::second => dur _duration;
 
     float _bpm;
     dur quarterNote;
+    dur eighthNote;
 
     /**
      *  List of movements in this piece.
@@ -29,9 +30,13 @@ public class Conductor {
     Movement @ _movements[10];
     0 => int _numMovements;
 
+    /**
+     *  Getter for duration of piece.
+     **/
     fun dur duration() {
         return _duration;
     }
+    
     fun dur duration(dur aDuration) {
         aDuration => _duration;
 
@@ -45,6 +50,26 @@ public class Conductor {
         return _duration;
     }
 
+    /**
+     *  This should be called when the duration of any sections
+     *  are changed.
+     **/
+    fun void calculate_duration() {
+        0::second => dur totalDuration;
+
+        // Get total duration
+        for(0 => int i; i < _numMovements; i++) {
+            _movements[i].duration() +=> totalDuration;
+        }
+
+        totalDuration => this._duration;
+
+        // Update ratios
+        for(0 => int i; i < _numMovements; i++) {
+            _movements[i].duration()/totalDuration => _movements[i]._durationRatio;
+        }
+    }
+
     fun float bpm() {
         return _bpm;
     }
@@ -52,6 +77,7 @@ public class Conductor {
         aBpm => _bpm;
 
         (1/_bpm)*1::minute => quarterNote;
+        quarterNote/2 => eighthNote;
 
         return _bpm;
     }
@@ -62,7 +88,7 @@ public class Conductor {
     fun void pre_play() {
         0 => float allLengths;
         for(0 => int i; i < _numMovements; i++) {
-            _movements[i]._length +=> allLengths;
+            _movements[i]._durationRatio +=> allLengths;
         }
 
         if(allLengths > 1) {
@@ -75,8 +101,6 @@ public class Conductor {
     /**
      *  Begin playing the piece.
      **/
-    // fun void _play() {        
-    // }
     fun void play() {
         this.pre_play();
 
@@ -87,7 +111,7 @@ public class Conductor {
 
             <<< "Conductor.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration >>>;
             _movements[i].play();
-            movementDuration => now;
+            movementDuration + (now % this.quarterNote) => now;
         }
         <<< "Conductor.play():", "\n\t", "Finished playing all movements" >>>;
 
@@ -106,29 +130,61 @@ public class Conductor {
 
         fun Conductor conductor(Conductor aConductor) {
             aConductor @=> _conductor;
-
-            this.calculate_duration();
-
             return _conductor;
         }
 
         fun Conductor conductor() {
+            if(this._conductor == null) {
+                <<< "\n", "ERROR: `Movement` has no `Conductor`." >>>;
+                me.exit();
+            }
             return _conductor;
         }
 
         /**
-         *  Length of this movement
-         *  (fraction of the conductor's duration)
+         *  Ratio of this movements duration to the 
+         *  overall (conductor's) duration.
          **/
-        float _length;
+        float _durationRatio;
 
         /**
          *  Actual duration (will depend on conductor)
          **/
         dur _duration;
-
+        
+        /**
+         *  Getter for duration of this segment.
+         **/
         fun dur duration() {
             return _duration;
+        }
+    
+        /**
+         *  Set the duration of this section by a ratio of the total
+         *  duration.
+         *
+         *  @param  aRatio  Ratio of this sections duration / total
+         *  conductor's duration.
+         **/
+        fun dur duration(float aRatio) {
+            aRatio => this._durationRatio;
+            this.calculate_duration();
+
+            return this._duration;
+        }
+
+        /**
+         *  Set the duration of this section by a `dur` value.  This
+         *  will modify the duration of the `Conductor`, and
+         *  the ratios of the other sections currently in the piece.
+         *
+         *  @param  aDuration  The duration of this section.
+         **/
+        fun dur duration(dur aDuration) {
+            aDuration => this._duration;
+            this.conductor().calculate_duration();
+
+            return this._duration;
         }
 
         /**
@@ -137,12 +193,24 @@ public class Conductor {
          *  initially added to conductor.
          **/
         fun void calculate_duration() {
-            this._conductor._duration*this._length => this._duration;
+            this.conductor().duration() => dur conductorDuration;
+
+            if(conductorDuration == 0::second) {
+                <<< "\n", "WARNING: Conductor duration is 0" >>>;
+            }
+
+            conductorDuration*this._durationRatio => this._duration;
         }
 
-        // fun void _play() {
-            
-        // }
+        /**
+         *  HACK: Used instead of `super`.  Should be called before
+         *  `play`.
+         **/
+        fun void pre_play() {
+            if(this.duration() == 0::second) {
+                <<< "\n", "WARNING: Duration of section is 0" >>>;
+            }
+        }
 
         fun void play() {
             Helpers.abstract_error("Conductor.Movement", "play");
@@ -153,6 +221,8 @@ public class Conductor {
 
     /**
      *  Append a new movement to this piece.
+     *
+     *  @param  aMovement  `Movement` instance to add.
      **/
     fun Movement add_movement(Movement aMovement) {
         aMovement @=> _movements[_numMovements];

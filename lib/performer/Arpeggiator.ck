@@ -20,10 +20,12 @@ public class Arpeggiator extends Performer {
      *  Start playing.  Will begin looping arpeggiation
      **/
     fun void play() {
+        this.pre_play();
+        
         while(true) {
-            if(mPitches != null) {
-                for(0 => int i; i < mPitches.size(); i++) {
-                    mPitches[i]*pitchMultiplier => float freq;
+            if(_scale != null) {
+                for(0 => int i; i < _scale.size(); i++) {
+                    _scale[i] + this.octave()*12 => float freq;
 
                     instr.freq(freq);
                     instr.play_note(

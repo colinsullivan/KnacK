@@ -19,9 +19,13 @@ public class DistortedKick extends Instrument {
         clip => this.outputs[i];
     }
 
-    clip.read("/Users/colin/Documents/Stanford/Courses/220a/hwfinal/otf/DistortedKick.aif");
-
     fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+
+        // If sample has not yet been loaded
+        if(clip.samples() == 0) {
+            clip.read("/Users/colin/Documents/Stanford/Courses/220a/hwfinal/otf/DistortedKick.aif");        
+        }
+        
         clip.pos(0);
         clip.length() => now;
     }

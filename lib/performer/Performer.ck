@@ -34,41 +34,53 @@ public class Performer {
     float noteOffVelocity;
 
     /**
-     *  Amount to multiply pitch by
-     **/
-    1 => float pitchMultiplier;
-
-    /**
-     *  Array of pitches to be used by performer.
-     **/
-    float mPitches[];
-
-    /**
      *  Array of pitch classes to be used by the 
      *  performer.
      **/
     int _scale[];
 
+    /**
+     *  Getter for pitch classes.
+     **/
     fun int[] scale() {
         return _scale;
     }
 
+    /**
+     *  Set pitch classes.
+     *
+     *  @param  aScale  Set of pitches as integer semitones.
+     **/
     fun int[] scale(int aScale[]) {
         aScale @=> _scale;
 
         return aScale;
     }
 
-    10 => int _nullWatchingPointers;
-    Aesthetic @ _watching[10];
-
+    /**
+     *  Transpose all pitch class values by this integer times 12.
+     **/
+    0 => int _octave;
 
     /**
-     *  Transpose all pitches by the given octave.
+     *  Set the octave to perform at.
      **/
-    fun void octave(int aOctaveValue) {
-        Math.pow(2, aOctaveValue) => pitchMultiplier;
+    fun int octave(int anOctaveValue) {
+        anOctaveValue => _octave;
+
+        return _octave;
     }
+
+    /**
+     *  Getter for octave value.
+     **/
+    fun int octave() {
+        return _octave;
+    }
+
+
+    10 => int _nullWatchingPointers;
+    Aesthetic @ _watching[10];
 
     /**
      *  Set the instrument for this `Performer`
@@ -112,44 +124,28 @@ public class Performer {
     }
 
     /**
+     *  Must be called before `play`.  HACK: Used instead of `super`.
+     **/
+    fun void pre_play() {
+        // Synchronize to conductor's quarter note
+        this.conductor().quarterNote => dur syncDuration;
+
+        // Time remaining until next quarter note
+        (now % syncDuration) => dur remainingTime;
+
+        // If we're not directly on the quarter note
+        // boundary, we'll have to wait until the next one.
+        if(remainingTime != 0::second) {
+            syncDuration - remainingTime => now;
+        }
+    }
+
+    /**
      *  Begin performing.  Should likely be sporked.
      **/
     fun void play() {
         Helpers.abstract_error("Performer", "play");
     }
-
-    /**
-     *  Set the pitches for this performer via an array
-     *  of MIDI note values.
-     *
-     *  @param  midiPitches  The MIDI note values to
-     *  arpeggiate over.
-     **/
-    // fun void pitches_midi(int midiPitches[]) {
-    //     midiPitches.size() => int numPitches;
-
-    //     // If amount of pitches is different from what is currently
-    //     // allocated
-    //     if(mPitches == null || numPitches != mPitches.size()) {
-    //         // Allocate a new array
-    //         new float [numPitches] @=> mPitches;
-    //         // newPitches @=> mPitches;
-    //     }
-
-    //     for(0 => int i; i < mPitches.size(); i++) {
-    //         Std.mtof(midiPitches[i]) => mPitches[i];
-    //     }
-    // }
-
-    // /**
-    //  *  Set the pitches for this performer via an array
-    //  *  of pitches in Hz.
-    //  *
-    //  *  @param  newPitches  The pitches to use (in Hz).
-    //  **/
-    // fun void pitches(float newPitches[]) {
-    //     newPitches @=> mPitches;
-    // }
 
     fun void _watch(Aesthetic a) {
         a => now; // When a does something

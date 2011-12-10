@@ -14,7 +14,7 @@
  **/
 class OtfDemo extends Conductor {
 
-    this.duration(20::second);
+    // this.duration(20::second);
     this.bpm(60);
 
     BoringKickPerformer kickPerformer;
@@ -24,35 +24,35 @@ class OtfDemo extends Conductor {
     poopsPerformer.conductor(this);
 
     class BoringIntro extends Conductor.Movement {
-        0.25 => _length;
-
         fun void play() {
-            <<< "BoringIntro.play()" >>>;
+            this.pre_play();
+
+            <<< "\n", "BoringIntro.play()" >>>;
             this.conductor() $ OtfDemo @=> OtfDemo @ c;
+            
+            c.kickPerformer.speed(c.quarterNote);
             spork ~ c.kickPerformer.play();
         }
     }
     BoringIntro intro;
     this.add_movement(intro);
+    intro.duration(this.quarterNote*4*2); // 2 bars
 
     class BoringIntroWithSinePoops extends Conductor.Movement {
-        0.75 => _length;
-
         fun void play() {
-            <<< "BoringIntroWithSinePoops.play()" >>>;
+            this.pre_play();
+
+            <<< "\n", "BoringIntroWithSinePoops.play()" >>>;
             this.conductor() $ OtfDemo @=> OtfDemo @ c;
 
+            c.kickPerformer.speed(c.eighthNote);
             spork ~ c.poopsPerformer.play();
         }
     }
-    this.add_movement(new BoringIntroWithSinePoops);
+    BoringIntroWithSinePoops boring;
+    this.add_movement(boring);
+    boring.duration(this.quarterNote*4*4);
 }
 
 OtfDemo demo;
 demo.play();
-
-// SndBuf clip;
-// clip.read("/Users/colin/Documents/Stanford/Courses/220a/hwfinal/otf/DistortedKick.aif");
-// 1::second => now;
-// clip.pos(0);
-// clip.length() => now;
