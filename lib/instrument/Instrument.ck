@@ -27,6 +27,11 @@ public class Instrument extends UGen {
      **/
     Dyno @ outputs[];
 
+    /**
+     *  This gain goes to all outputs as a shortcut
+     **/
+    Gain allOutputs;
+
     _initialize_audio();
 
     /**
@@ -73,6 +78,8 @@ public class Instrument extends UGen {
 
             // Connect to proper dac channel
             outputs[i] => dac.chan(i);
+
+            allOutputs => outputs[i];
         }
     }
 
