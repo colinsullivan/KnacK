@@ -15,7 +15,7 @@ public class DistortedKick extends Instrument {
     
     SndBuf clip;
 
-    clip.read("/Users/colin/Documents/Stanford/Courses/220a/hwfinal/examples/otf/DistortedKick.aif");
+    clip.read(me.arg(0)+"/DistortedKick.aif");
     clip.pos(clip.samples());
     clip => outputsAll;
 

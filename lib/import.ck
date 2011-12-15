@@ -7,18 +7,31 @@
  *              Licensed under the MIT license.
  **/
 
-Machine.add("Helpers.ck");
+string libDirectory;
+if(me.args() == 0) {
+    <<< "\n", "WARNING:\tNo lib directory specified, assuming `./lib`." >>>;
+    "./lib" => libDirectory;
+}
+else if(me.args() == 1) {
+    me.arg(0) => libDirectory;
+}
+else {
+    <<< "\n", "ERROR:\tInvalid amount of arguments." >>>;
+    me.exit();
+}
 
-// Machine.add("performer/PerformerBase.ck");
+[
+    "Helpers.ck",
+    "aesthetic/Aesthetic.ck",
+    "aesthetic/Happy.ck",
+    "score/Score.ck",
+    "instrument/Instrument.ck",
+    "instrument/BassBalls.ck",
+    "instrument/Bubbly.ck",
+    "performer/Performer.ck",
+    "performer/Arpeggiator.ck"
+] @=> string toLoad[];
 
-Machine.add("aesthetic/Aesthetic.ck");
-Machine.add("aesthetic/Happy.ck");
-
-Machine.add("score/Score.ck");
-
-Machine.add("instrument/Instrument.ck");
-Machine.add("instrument/BassBalls.ck");
-Machine.add("instrument/Bubbly.ck");
-
-Machine.add("performer/Performer.ck");
-Machine.add("performer/Arpeggiator.ck");
+for(0 => int i; i < toLoad.size(); i++) {
+    Machine.add(libDirectory+"/"+toLoad[i]);
+}
