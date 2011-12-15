@@ -16,7 +16,16 @@ public class Bell extends Instrument {
     // Partials
     SinOsc partials[8];
     // Max gain values for each partial
-    float partialGain[8];
+    [
+        1.0,
+        0.8,
+        0.5,
+        1/3,
+        0.25,
+        0.2,
+        2/3,
+        0.142
+    ] @=> float partialGain[];
     // Current base frequency values for each partial
     float partialFreqs[8];
 
@@ -24,20 +33,32 @@ public class Bell extends Instrument {
     SinOsc frequencyModulator => blackhole;
     frequencyModulator.freq(10);
 
+    // Delay
+    // DelayA delay => outputsAll;
+    // delay.max(10::second);
+    // delay.delay(1::second);
+
+    // Gain delayFeedback;
+    // delayFeedback.gain(0.33);
+    // delay => delayFeedback => delay;
+
     // Amplitude modulation for each partial
     // Gain partialTremolo[8];
 
     for(0 => int i; i < partials.size(); i++) {
-        // partials[i] => partialTremolo[i] => allOutputs;
-        partials[i] => allOutputs;
+    //     // partials[i] => partialTremolo[i] => outputsAll;
+        partials[i] => outputsAll;
+    //     // partials[i] => delay;
         
-        (partials.size()$float/i$float)/partials.size()$float => partialGain[i];
-        // 1.0 => partialGain[i];
+    //     ((partials.size()$float/i$float)/partials.size()$float)*(1/partials.size()) => partialGain[i];
+    //     // 1.0 => partialGain[i];
 
-        <<< "partialGain["+i+"]:" >>>;
-        <<< partialGain[i] >>>;
+    //     <<< "partialGain["+i+"]:" >>>;
+    //     <<< partialGain[i] >>>;
     }
-    1.0 => partialGain[0];
+    // 1.0 => partialGain[0];
+
+    outputsAll.gain(0.125);
 
     // Amplitude modulation
     // SinOsc tremolo => blackhole;
@@ -76,12 +97,11 @@ public class Bell extends Instrument {
     spork ~ modulate_partials();
 
 
-    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+    fun void playNote(float onVelocity) {
 
         // tremolo.phase(0);
         frequencyModulator.phase(0);
         
-        <<< "onning" >>>;
         for(0 => float i; i < 1; 0.002 +=> i) {
             Math.pow(i, 3.0) => float v;
             // s.gain(v);
@@ -94,10 +114,8 @@ public class Bell extends Instrument {
 
             1::samp => now;
         }
-        <<< "on" >>>;
         // onDuration => now;
 
-        // <<< "offing" >>>;
         for(1 => float i; i > 0; 0.000009 -=> i) {
             float v;
             // if (1.0 - i < 0.001)
@@ -136,8 +154,4 @@ public class Bell extends Instrument {
 }
 
 Bell n;
-for(0 => int i; i < 9; i++) {
-    n.freq(Std.mtof(60 + 3*i));
-    spork ~ n.play_note(0.5, 0.1::second, 0.5, 1::second);
-    2::second => now;
-}
+n.playTest();

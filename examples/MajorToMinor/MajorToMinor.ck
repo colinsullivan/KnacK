@@ -18,7 +18,7 @@ Bubbly b;
  **/
 MajorToMinorArpeggiator a;
 a.instrument(b);
-a.speed(0.1::second);
+a.noteDuration(0.1::second);
 a.octave(4);
 
 // [47, 44, 41, 38, 35, 32, 29, 26] @=> int descendingMinorThirds[];

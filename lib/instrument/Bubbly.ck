@@ -66,7 +66,7 @@ public class Bubbly extends Instrument {
     d.max(2::second);
     d.delay(.33::second);
 
-    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+    fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
         imp.next(1.0);
 
         attackLife.keyOn();
@@ -97,3 +97,14 @@ public class Bubbly extends Instrument {
     // }
 
 }
+
+// Bubbly n;
+// 0 => int i;
+// while(true) {
+//     Std.mtof(96 - 3*i++) => float freq;
+//     n.freq(freq);
+//     <<< "freq:" >>>;
+//     <<< freq >>>;
+//     spork ~ n.playNote(0.5, 0.1::second, 0.5, 1::second);
+//     1::second => now;
+// }

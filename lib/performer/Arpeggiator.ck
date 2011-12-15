@@ -28,11 +28,11 @@ public class Arpeggiator extends Performer {
                     _scale[i] + this.octave()*12 => float freq;
 
                     instr.freq(freq);
-                    instr.play_note(
+                    instr.playNote(
                         0.5,
-                        noteOnDuration,
+                        _noteOnDuration,
                         0.5,
-                        noteOffDuration
+                        _noteOffDuration
                     );
                 }
             }

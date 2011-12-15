@@ -16,7 +16,7 @@ Arpeggiator a;
 a.instrument(Bubbly b);
 [47, 44, 41, 38, 35, 32, 29, 26] @=> int descendingMinorThirds[];
 
-a.speed(0.1::second);
+a.noteDuration(0.1::second);
 a.octave(2);
 a.pitches_midi(descendingMinorThirds);
 spork ~ a.play();

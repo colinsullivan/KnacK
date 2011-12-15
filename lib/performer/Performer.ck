@@ -19,8 +19,13 @@ public class Performer {
     /**
      *  Speed of notes
      **/
-    dur noteOnDuration;
-    dur noteOffDuration;
+    dur _noteDuration;
+
+    /**
+     *  Speed of notes if on and off is different.
+     **/
+    dur _noteOnDuration;
+    dur _noteOffDuration;
 
     /**
      *  Fastest note durations possible
@@ -111,22 +116,26 @@ public class Performer {
     /**
      *  Set the duration of the playing notes.
      *
-     *  @param  aDuration  Duration to use for `noteOnDuration`
-     *  and `noteOffDuration`.
+     *  @param  aDuration  Duration to use for `_noteOnDuration`, 
+     *  `_noteOffDuration`, and `noteDuration`.
      **/
-    fun void speed(dur aDuration) {
+    fun void noteDuration(dur aDuration) {
         // Check for minimum duration.  You probably don't want a
         // note duration of zero.
         if(aDuration < minNoteDuration) {
             minNoteDuration => aDuration;
         }
-        aDuration => noteOnDuration => noteOffDuration;
+        aDuration => _noteOnDuration => _noteOffDuration => _noteDuration;
     }
 
     /**
      *  Must be called before `play`.  HACK: Used instead of `super`.
      **/
     fun void pre_play() {
+        if(this.conductor() == null) {
+            <<< "\n", "Performer.ck:\tWARNING: No conductor to sync to.", "\n" >>>;
+            return;
+        }
         // Synchronize to conductor's quarter note
         this.conductor().quarterNote => dur syncDuration;
 
@@ -192,5 +201,47 @@ public class Performer {
 
         return;
     }
+
+    // TODO:    this generalized test doesn't work because of 
+    //          polymorphism issues.  What else is new.
+
+    // class TestConductor extends Conductor {
+    //     this.bpm(120);
+    //     this.duration(this.quarterNote*8);
+
+    //     class TestMovement extends Conductor.Movement {
+    //         fun void play() {
+    //             this.pre_play();
+
+    //             spork ~ (this.conductor()$TestConductor)._testPerformer.play();
+    //         }
+    //     }
+    //     TestMovement m;
+    //     this.add_movement(m);
+    //     m.duration(1.0);
+
+
+    //     Performer _testPerformer;
+    //     fun void testPerformer(Performer anPerformer) {
+    //         _testPerformer @=> anPerformer;
+    //         _testPerformer.conductor(this);
+    //     }
+    // }
+    
+    fun void playTest() {
+        /**
+         *  Create a `Conductor` just for the purposes of 
+         *  this test.
+         **/
+        // TestConductor testConductor;
+        // testConductor.testPerformer(this);
+        // testConductor.play();
+
+        this.noteDuration(1::second);
+        spork ~ this.play();
+        8::second => now;
+        me.exit();
+    }
+
 
 }

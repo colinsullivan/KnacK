@@ -26,11 +26,9 @@ class OtfDemo extends Conductor {
     class BoringIntro extends Conductor.Movement {
         fun void play() {
             this.pre_play();
-
-            <<< "\n", "BoringIntro.play()" >>>;
             this.conductor() $ OtfDemo @=> OtfDemo @ c;
             
-            c.kickPerformer.speed(c.quarterNote);
+            c.kickPerformer.noteDuration(c.quarterNote);
             spork ~ c.kickPerformer.play();
         }
     }
@@ -45,7 +43,7 @@ class OtfDemo extends Conductor {
             <<< "\n", "BoringIntroWithSinePoops.play()" >>>;
             this.conductor() $ OtfDemo @=> OtfDemo @ c;
 
-            c.kickPerformer.speed(c.eighthNote);
+            c.kickPerformer.noteDuration(c.eighthNote);
             spork ~ c.poopsPerformer.play();
         }
     }

@@ -23,14 +23,20 @@ public class Instrument extends UGen {
     dac.channels() => int mChannels;
 
     /**
-     *  Master outputs will be Dyno's.
+     *  Master outputs for each channel will be Dyno's.
      **/
     Dyno @ outputs[];
 
     /**
      *  This gain goes to all outputs as a shortcut
      **/
-    Gain allOutputs;
+    Gain outputsAll;
+
+    /**
+     *  Gain for each output will be the same.
+     *  (outputsAll.gain should always be 1 TODO: Make this happen)
+     **/
+    float _gain;
 
     _initialize_audio();
 
@@ -40,27 +46,47 @@ public class Instrument extends UGen {
      *  @param  aGain  The gain value [0.0 - 1.0]
      **/
     fun float gain(float aGain) {
+        aGain => _gain;
         for(0 => int i; i < outputs.size(); i++) {
-            outputs[i].gain(aGain);
+            outputs[i].gain(_gain);
         }
-        return aGain;
+        return _gain;
     }
 
-    // /**
-    //  *  Get the overall gain of the instrument.
-    //  **/
-    // fun float gain() {
-    //     return g.gain();
-    // }
+    fun float gain() {
+        return _gain;
+    }
 
-
+    /**
+     *  Abstract method for setting frequency value.
+     *
+     *  @param  aFrequency  Frequency value to use.
+     **/
     fun float freq(float aFrequency) {
-        Helpers.abstract_error("Instrument", "freq");
+        Helpers.abstract_error("Instrument", "freq(float)");
         return -1.0;
     }
 
-    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
-        Helpers.abstract_error("Instrument", "play_note");
+    /**
+     *  Play a single note just given a velocity.
+     *
+     *  @param  onVelocity  The velocity to use.
+     **/
+    fun void playNote(float onVelocity) {
+        Helpers.abstract_error("Instrument", "playNote(float)");
+        return;
+    }
+
+    /**
+     *  Play a single note with the given parameters.
+     *
+     *  @param  onVelocity      The attack of the note [0.0 - 1.0]
+     *  @param  onDuration      The duration of the attack, if needed.
+     *  @param  offVelocity     The velocity of the decay [0.0 - 1.0], if needed.
+     *  @param  offDuration     The duration of decay, if needed.
+     **/
+    fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+        Helpers.abstract_error("Instrument", "playNote(float, dur, float, dur)");
         return;
     }
 
@@ -79,8 +105,36 @@ public class Instrument extends UGen {
             // Connect to proper dac channel
             outputs[i] => dac.chan(i);
 
-            allOutputs => outputs[i];
+            outputsAll => outputs[i];
         }
+
+        this.gain(1.0);
     }
 
+    /**
+     *  Play a descending scale for testing purposes.
+     **/
+    fun void playTest() {
+        return this.playTest(96, 1.0);
+    }
+
+    /**
+     *  Play test scale given starting MIDI note and 
+     *  velocity to use for notes. 
+     *
+     *  TODO: handle testing of playNote(float, dur, float, dur)
+     *
+     *  @param  startingNote  Starting MIDI value.
+     *  @param  noteVelocity  Velocity of note to use.
+     **/
+    
+    fun void playTest(int startingNote, float noteVelocity) {
+        0 => int i;
+        while(i < 8) {
+            Std.mtof(startingNote - 3*i++) => float freq;
+            this.freq(freq);
+            spork ~ this.playNote(noteVelocity);
+            1::second => now;
+        }
+    }
 }

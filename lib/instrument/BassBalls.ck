@@ -49,7 +49,7 @@ public class BassBalls extends Instrument {
         return mRhodey.freq(aFrequency);
     }
 
-    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+    fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
         mEnv.keyOn();
         mRhodey.noteOn(onVelocity);
         onDuration => now;

@@ -21,8 +21,17 @@ public class SinePoop extends Instrument {
     .5 => float sGain;
     e.duration(0.01::second);
 
+    /**
+     *  Play note with default duration.
+     **/
+    fun void playNote(float onVelocity) {
+        return this.playNote(onVelocity, 0.5::second, onVelocity, 0.5::second);
+    }
 
-    fun void play_note(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
+    /**
+     *  Play note with given velocity and duration.
+     **/
+    fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
 
         s.gain(this.sGain*onVelocity);
         s.phase(0);
@@ -38,7 +47,5 @@ public class SinePoop extends Instrument {
     }
 }
 
-// SinePoop s;
-// s.freq(440);
-// spork ~ s.play_note(1, 0.25::second, 1, 0.25::second);
-// 3::second => now;
+SinePoop s;
+s.playTest();

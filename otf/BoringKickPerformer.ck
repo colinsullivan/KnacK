@@ -8,7 +8,8 @@
  **/
 
 /**
- *  @class      
+ *  @class      Basic performer that plays a kick drum
+ *  on each beat at a given speed.
  *  @extends    Performer
  **/
 public class BoringKickPerformer extends Performer {
@@ -17,16 +18,20 @@ public class BoringKickPerformer extends Performer {
     this.instrument(kick);
 
     /**
-     *  Play kick on each quarter note.
+     *  Play kick after each `noteDuration` amount
+     *  of time.
      **/
     fun void play() {
-        <<< "\n", "BoringKickPerformer.play" >>>;
-        this.pre_play();
+        this.pre_play(); // super
 
         while(true) {
-            spork ~ kick.play_note(0.0, 0::second, 0.0, 0::second);
+            <<< "hello" >>>;
+            spork ~ kick.playNote(1.0);
 
-            this.noteOnDuration => now;
+            this._noteDuration => now;
         }
     }
 }
+
+// BoringKickPerformer x;
+// x.playTest();

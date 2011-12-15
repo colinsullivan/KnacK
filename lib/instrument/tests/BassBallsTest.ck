@@ -11,4 +11,4 @@ BassBalls b;
 
 b => dac;
 
-b.play_note(0.5, 0.5::second, 0.5, 0.5::second);
+b.playNote(0.5, 0.5::second, 0.5, 0.5::second);

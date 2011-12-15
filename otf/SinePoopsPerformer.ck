@@ -43,7 +43,7 @@ public class SinePoopsPerformer extends Performer {
 
             0.5 => float poopVelocity;
             s.freq(poopPitch);
-            spork ~ s.play_note(poopVelocity, poopDuration/2, poopVelocity, poopDuration/2);
+            spork ~ s.playNote(poopVelocity, poopDuration/2, poopVelocity, poopDuration/2);
 
             poopDuration => now;
         }
