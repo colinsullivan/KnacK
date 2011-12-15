@@ -1,5 +1,5 @@
 /**
- *  @file       Conductor.ck
+ *  @file       Score.ck
  *
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  *
@@ -8,13 +8,13 @@
  **/
 
 /**
- *  @class      Base `Conductor` class.
+ *  @class      Base `Score` class.
  *
  *  Handles overall operations of a performance.  Meant
  *  to be subclassed once per piece.
  *  
  **/
-public class Conductor {
+public class Score {
     /**
      *  Overall duration of the piece
      **/
@@ -23,6 +23,7 @@ public class Conductor {
     float _bpm;
     dur quarterNote;
     dur eighthNote;
+    dur halfNote;
 
     /**
      *  List of movements in this piece.
@@ -78,6 +79,7 @@ public class Conductor {
 
         (1/_bpm)*1::minute => quarterNote;
         quarterNote/2 => eighthNote;
+        quarterNote*2 => halfNote;
 
         return _bpm;
     }
@@ -104,16 +106,16 @@ public class Conductor {
     fun void play() {
         this.pre_play();
 
-        <<< "Conductor.play():", "\n\t", "Playing all movements in order by default" >>>;
+        <<< "Score.play():", "\n\t", "Playing all movements in order by default" >>>;
 
         for(0 => int i; i < _numMovements; i++) {
             _movements[i].duration() => dur movementDuration;
 
-            <<< "Conductor.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration >>>;
+            <<< "Score.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration >>>;
             _movements[i].play();
-            movementDuration + (now % this.quarterNote) => now;
+            movementDuration => now;
         }
-        <<< "Conductor.play():", "\n\t", "Finished playing all movements" >>>;
+        <<< "Score.play():", "\n\t", "Finished playing all movements" >>>;
 
         // this.duration() => now;
     }
@@ -124,31 +126,31 @@ public class Conductor {
     public class Movement {
 
         /**
-         *  Pointer to the conductor.
+         *  Pointer to the score.
          **/
-        Conductor @ _conductor;
+        Score @ _score;
 
-        fun Conductor conductor(Conductor aConductor) {
-            aConductor @=> _conductor;
-            return _conductor;
+        fun Score score(Score aScore) {
+            aScore @=> _score;
+            return _score;
         }
 
-        fun Conductor conductor() {
-            if(this._conductor == null) {
-                <<< "\n", "ERROR: `Movement` has no `Conductor`." >>>;
+        fun Score score() {
+            if(this._score == null) {
+                <<< "\n", "ERROR: `Movement` has no `Score`." >>>;
                 me.exit();
             }
-            return _conductor;
+            return _score;
         }
 
         /**
          *  Ratio of this movements duration to the 
-         *  overall (conductor's) duration.
+         *  overall (score's) duration.
          **/
         float _durationRatio;
 
         /**
-         *  Actual duration (will depend on conductor)
+         *  Actual duration (will depend on score)
          **/
         dur _duration;
         
@@ -164,7 +166,7 @@ public class Conductor {
          *  duration.
          *
          *  @param  aRatio  Ratio of this sections duration / total
-         *  conductor's duration.
+         *  score's duration.
          **/
         fun dur duration(float aRatio) {
             aRatio => this._durationRatio;
@@ -175,31 +177,31 @@ public class Conductor {
 
         /**
          *  Set the duration of this section by a `dur` value.  This
-         *  will modify the duration of the `Conductor`, and
+         *  will modify the duration of the `Score`, and
          *  the ratios of the other sections currently in the piece.
          *
          *  @param  aDuration  The duration of this section.
          **/
         fun dur duration(dur aDuration) {
             aDuration => this._duration;
-            this.conductor().calculate_duration();
+            this.score().calculate_duration();
 
             return this._duration;
         }
 
         /**
-         *  Should be called whenever duration of conductor or
+         *  Should be called whenever duration of score or
          *  length of movement has changed, as well as when
-         *  initially added to conductor.
+         *  initially added to score.
          **/
         fun void calculate_duration() {
-            this.conductor().duration() => dur conductorDuration;
+            this.score().duration() => dur scoreDuration;
 
-            if(conductorDuration == 0::second) {
-                <<< "\n", "WARNING: Conductor duration is 0" >>>;
+            if(scoreDuration == 0::second) {
+                <<< "\n", "WARNING: Score duration is 0" >>>;
             }
 
-            conductorDuration*this._durationRatio => this._duration;
+            scoreDuration*this._durationRatio => this._duration;
         }
 
         /**
@@ -213,7 +215,7 @@ public class Conductor {
         }
 
         fun void play() {
-            Helpers.abstract_error("Conductor.Movement", "play");
+            Helpers.abstract_error("Score.Movement", "play");
             // spork ~ this._play();
             // this.duration() => now;
         }
@@ -226,7 +228,7 @@ public class Conductor {
      **/
     fun Movement add_movement(Movement aMovement) {
         aMovement @=> _movements[_numMovements];
-        aMovement.conductor(this);
+        aMovement.score(this);
         1 +=> _numMovements;
         return aMovement;
     }
@@ -235,7 +237,7 @@ public class Conductor {
      *  Append a new performer to the list of performers
      **/
     // fun Performer add_performer(Performer aPerformer) {
-    //     aPerformer.conductor(this);
+    //     aPerformer.score(this);
     //     return aPerformer;
     // }
 

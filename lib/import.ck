@@ -14,7 +14,7 @@ Machine.add("Helpers.ck");
 Machine.add("aesthetic/Aesthetic.ck");
 Machine.add("aesthetic/Happy.ck");
 
-Machine.add("conductor/Conductor.ck");
+Machine.add("score/Score.ck");
 
 Machine.add("instrument/Instrument.ck");
 Machine.add("instrument/BassBalls.ck");

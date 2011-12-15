@@ -95,22 +95,22 @@ public class Performer {
     }
 
     /**
-     *  Reference to `Conductor` instance that is
+     *  Reference to `Score` instance that is
      *  controlling this `Performer`.
      **/
-    Conductor @ _conductor;
+    Score @ _score;
 
     /**
-     *  Set the `Conductor` instance that controls
+     *  Set the `Score` instance that controls
      *  this `Performer`.
      **/
-    fun Conductor conductor(Conductor aConductor) {
-        aConductor @=> this._conductor;
-        return aConductor;
+    fun Score score(Score aScore) {
+        aScore @=> this._score;
+        return aScore;
     }
 
-    fun Conductor conductor() {
-        return _conductor;
+    fun Score score() {
+        return _score;
     }
 
     /**
@@ -132,15 +132,19 @@ public class Performer {
      *  Must be called before `play`.  HACK: Used instead of `super`.
      **/
     fun void pre_play() {
-        if(this.conductor() == null) {
-            <<< "\n", "Performer.ck:\tWARNING: No conductor to sync to.", "\n" >>>;
+        if(this.score() == null) {
+            <<< "\n", "Performer.ck:\tWARNING: No score to sync to.", "\n" >>>;
             return;
         }
-        // Synchronize to conductor's quarter note
-        this.conductor().quarterNote => dur syncDuration;
+
+        // Synchronize to score's quarter note
+        this.score().quarterNote => dur syncDuration;
 
         // Time remaining until next quarter note
         (now % syncDuration) => dur remainingTime;
+
+        <<< "remainingTime:" >>>;
+        <<< remainingTime >>>;
 
         // If we're not directly on the quarter note
         // boundary, we'll have to wait until the next one.
@@ -205,15 +209,15 @@ public class Performer {
     // TODO:    this generalized test doesn't work because of 
     //          polymorphism issues.  What else is new.
 
-    // class TestConductor extends Conductor {
+    // class TestScore extends Score {
     //     this.bpm(120);
     //     this.duration(this.quarterNote*8);
 
-    //     class TestMovement extends Conductor.Movement {
+    //     class TestMovement extends Score.Movement {
     //         fun void play() {
     //             this.pre_play();
 
-    //             spork ~ (this.conductor()$TestConductor)._testPerformer.play();
+    //             spork ~ (this.score()$TestScore)._testPerformer.play();
     //         }
     //     }
     //     TestMovement m;
@@ -224,18 +228,18 @@ public class Performer {
     //     Performer _testPerformer;
     //     fun void testPerformer(Performer anPerformer) {
     //         _testPerformer @=> anPerformer;
-    //         _testPerformer.conductor(this);
+    //         _testPerformer.score(this);
     //     }
     // }
-    
+
     fun void playTest() {
         /**
-         *  Create a `Conductor` just for the purposes of 
+         *  Create a `Score` just for the purposes of 
          *  this test.
          **/
-        // TestConductor testConductor;
-        // testConductor.testPerformer(this);
-        // testConductor.play();
+        // TestScore testScore;
+        // testScore.testPerformer(this);
+        // testScore.play();
 
         this.noteDuration(1::second);
         spork ~ this.play();

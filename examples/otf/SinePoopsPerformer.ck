@@ -26,10 +26,10 @@ public class SinePoopsPerformer extends Performer {
         while(true) {
             dur poopDuration;
             if( Std.randf() > -.5 ) {
-                this.conductor().quarterNote/4 => poopDuration;
+                this.score().quarterNote/4 => poopDuration;
             }
             else {
-                this.conductor().quarterNote/8 => poopDuration;
+                this.score().quarterNote/8 => poopDuration;
             }
             
 

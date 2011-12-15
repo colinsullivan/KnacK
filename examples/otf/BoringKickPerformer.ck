@@ -25,7 +25,6 @@ public class BoringKickPerformer extends Performer {
         this.pre_play(); // super
 
         while(true) {
-            <<< "hello" >>>;
             spork ~ kick.playNote(1.0);
 
             this._noteDuration => now;

@@ -10,38 +10,38 @@
 
 /**
  *  @class      
- *  @extends    Conductor
+ *  @extends    Score
  **/
-class OtfDemo extends Conductor {
+class OtfDemo extends Score {
 
     // this.duration(20::second);
     this.bpm(60);
 
     BoringKickPerformer kickPerformer;
-    kickPerformer.conductor(this);
+    kickPerformer.score(this);
 
     SinePoopsPerformer poopsPerformer;
-    poopsPerformer.conductor(this);
+    poopsPerformer.score(this);
 
-    class BoringIntro extends Conductor.Movement {
+    class BoringIntro extends Score.Movement {
         fun void play() {
             this.pre_play();
-            this.conductor() $ OtfDemo @=> OtfDemo @ c;
+            this.score() $ OtfDemo @=> OtfDemo @ score;
             
-            c.kickPerformer.noteDuration(c.quarterNote);
-            spork ~ c.kickPerformer.play();
+            score.kickPerformer.noteDuration(score.quarterNote);
+            spork ~ score.kickPerformer.play();
         }
     }
     BoringIntro intro;
     this.add_movement(intro);
     intro.duration(this.quarterNote*4*2); // 2 bars
 
-    class BoringIntroWithSinePoops extends Conductor.Movement {
+    class BoringIntroWithSinePoops extends Score.Movement {
         fun void play() {
             this.pre_play();
 
             <<< "\n", "BoringIntroWithSinePoops.play()" >>>;
-            this.conductor() $ OtfDemo @=> OtfDemo @ c;
+            this.score() $ OtfDemo @=> OtfDemo @ c;
 
             c.kickPerformer.noteDuration(c.eighthNote);
             spork ~ c.poopsPerformer.play();
@@ -49,7 +49,7 @@ class OtfDemo extends Conductor {
     }
     BoringIntroWithSinePoops boring;
     this.add_movement(boring);
-    boring.duration(this.quarterNote*4*4);
+    boring.duration(this.quarterNote*4*4); // 4 bars
 }
 
 OtfDemo demo;

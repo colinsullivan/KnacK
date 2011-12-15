@@ -47,5 +47,5 @@ public class SinePoop extends Instrument {
     }
 }
 
-SinePoop s;
-s.playTest();
+// SinePoop s;
+// s.playTest();
