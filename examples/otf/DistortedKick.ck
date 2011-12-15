@@ -15,7 +15,16 @@ public class DistortedKick extends Instrument {
     
     SndBuf clip;
 
-    clip.read(me.arg(0)+"/DistortedKick.aif");
+    string sampleDirectory;
+
+    if(me.args() == 0) {
+        "./" => sampleDirectory;
+    }
+    else {
+        me.arg(0) => sampleDirectory;
+    }
+
+    clip.read(sampleDirectory+"/DistortedKick.aif");
     clip.pos(clip.samples());
     clip => outputsAll;
 

@@ -18,21 +18,29 @@ public class SinePoopsPerformer extends Performer {
     this.scale([ 0, 2, 4, 7, 9 ]);
 
     fun void play() {
-        <<< "\n", "SinePoopsPerformer.play()" >>>;
         this.pre_play();
 
 
         // Play a random note from the scale on each 8th note.
         while(true) {
             dur poopDuration;
-            if( Std.randf() > -.5 ) {
-                this.score().quarterNote/4 => poopDuration;
+            if(this.score() != null) {
+                if( Std.randf() > -.5 ) {
+                    this.score().quarterNote/4 => poopDuration;
+                }
+                else {
+                    this.score().quarterNote/8 => poopDuration;
+                }
             }
+            // Testing
             else {
-                this.score().quarterNote/8 => poopDuration;
+                if(Std.randf() > -.5) {
+                    2::second/4 => poopDuration;
+                }
+                else {
+                    2::second/8 => poopDuration;
+                }
             }
-            
-
             // get note class
             this.scale()[ Math.rand2(0,4) ] => float freq;
             // Play at a random octave
@@ -49,3 +57,6 @@ public class SinePoopsPerformer extends Performer {
         }
     }
 }
+
+// SinePoopsPerformer x;
+// x.playTest();
