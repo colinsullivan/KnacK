@@ -70,10 +70,21 @@ public class Instrument extends UGen {
     /**
      *  Play a single note just given a velocity.
      *
-     *  @param  onVelocity  The velocity to use.
+     *  @param  noteVelocity  The velocity to use.
      **/
-    fun void playNote(float onVelocity) {
+    fun void playNote(float noteVelocity) {
         Helpers.abstract_error("Instrument", "playNote(float)");
+        return;
+    }
+
+    /**
+     *  Play a single note given a velocity and duration.
+     *
+     *  @param  noteVelocity  The velocity to use.
+     *  @param  noteDuration  The duration to use.
+     **/
+    fun void playNote(float noteVelocity, dur noteDuration) {
+        Helpers.abstract_error("Instrument", "playNote(float, dur)");
         return;
     }
 
@@ -115,7 +126,11 @@ public class Instrument extends UGen {
      *  Play a descending scale for testing purposes.
      **/
     fun void playTest() {
-        return this.playTest(96, 1.0);
+        return this.playTest(96, 1.0, 1::second);
+    }
+
+    fun void playTest(float noteVelocity, dur noteDuration) {
+        return this.playTest(96, noteVelocity, noteDuration);
     }
 
     /**
@@ -124,17 +139,18 @@ public class Instrument extends UGen {
      *
      *  TODO: handle testing of playNote(float, dur, float, dur)
      *
-     *  @param  startingNote  Starting MIDI value.
-     *  @param  noteVelocity  Velocity of note to use.
+     *  @param  startingNote    Starting MIDI value.
+     *  @param  noteVelocity    Velocity of note to use.
+     *  @param  noteDuration    Duration for notes.
      **/
     
-    fun void playTest(int startingNote, float noteVelocity) {
+    fun void playTest(int startingNote, float noteVelocity, dur noteDuration) {
         0 => int i;
         while(i < 8) {
             Std.mtof(startingNote - 3*i++) => float freq;
             this.freq(freq);
-            spork ~ this.playNote(noteVelocity);
-            1::second => now;
+            spork ~ this.playNote(noteVelocity, noteDuration);
+            noteDuration => now;
         }
     }
 }
