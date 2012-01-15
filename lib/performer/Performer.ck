@@ -143,8 +143,8 @@ public class Performer {
         // Time remaining until next quarter note
         (now % syncDuration) => dur remainingTime;
 
-        <<< "remainingTime:" >>>;
-        <<< remainingTime >>>;
+        // <<< "remainingTime:" >>>;
+        // <<< remainingTime >>>;
 
         // If we're not directly on the quarter note
         // boundary, we'll have to wait until the next one.

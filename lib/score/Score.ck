@@ -83,6 +83,8 @@ public class Score {
 
         return _bpm;
     }
+    // Default bpm
+    this.bpm(120);
 
     /**
      *  Determine if the movement durations are properly entered.
