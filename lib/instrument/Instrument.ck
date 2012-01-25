@@ -99,6 +99,10 @@ public class Instrument extends UGen {
         Helpers.abstract_error("Instrument", "noteOff(float)");
         return;
     }
+    fun void noteOff(dur aDuration) {
+        Helpers.abstract_error("Instrument", "noteOff(dur)");
+        return;
+    }
 
     /**
      *  TODO: Should these be in player?  If they have to do with time?

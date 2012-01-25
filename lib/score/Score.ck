@@ -90,13 +90,13 @@ public class Score {
      *  Determine if the movement durations are properly entered.
      **/
     fun void pre_play() {
-        0 => float allLengths;
+        0::samp => dur allDurations;
         for(0 => int i; i < _numMovements; i++) {
-            _movements[i]._durationRatio +=> allLengths;
+            _movements[i].duration() +=> allDurations;
         }
 
-        if(allLengths > 1) {
-            <<< "\n", "ERROR: Lengths of movements do not add up to 1" >>>;
+        if(allDurations != this.duration()) {
+            <<< "\n", "ERROR: Durations of movements do not add up to score duration." >>>;
             me.exit();
         }
     }
@@ -113,8 +113,8 @@ public class Score {
         for(0 => int i; i < _numMovements; i++) {
             _movements[i].duration() => dur movementDuration;
 
-            <<< "Score.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration >>>;
-            _movements[i].play();
+            <<< "Score.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration, "\n\t", "now: ", now >>>;
+            spork ~ _movements[i].play();
             movementDuration => now;
         }
         <<< "Score.play():", "\n\t", "Finished playing all movements" >>>;
@@ -139,7 +139,7 @@ public class Score {
 
         fun Score score() {
             if(this._score == null) {
-                <<< "\n", "ERROR: `Movement` has no `Score`." >>>;
+                <<< "\n", "ERROR: `Movement` has no `Score`.  Call `add_movement` on the score first." >>>;
                 me.exit();
             }
             return _score;
@@ -155,6 +155,11 @@ public class Score {
          *  Actual duration (will depend on score)
          **/
         dur _duration;
+
+        /**
+         *  Time this movement's `play` method was last called
+         **/
+        time _startTime;
         
         /**
          *  Getter for duration of this segment.
@@ -212,8 +217,20 @@ public class Score {
          **/
         fun void pre_play() {
             if(this.duration() == 0::second) {
-                <<< "\n", "WARNING: Duration of section is 0" >>>;
+                <<< "\n", "ERROR: Duration of section is 0" >>>;
+                return;
             }
+
+            now => _startTime;
+        }
+
+        /**
+         *  Time remaining in this movement.
+         **/
+        fun dur remaining_time() {
+            _startTime+this.duration() => time endTime;
+
+            return endTime-now;
         }
 
         fun void play() {
