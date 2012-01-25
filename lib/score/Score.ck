@@ -108,12 +108,12 @@ public class Score {
     fun void play() {
         this.pre_play();
 
-        <<< "Score.play():", "\n\t", "Playing all movements in order by default" >>>;
+        <<< "Score.play():", "\n\t", "Playing all", _numMovements, "movements in order" >>>;
 
         for(0 => int i; i < _numMovements; i++) {
             _movements[i].duration() => dur movementDuration;
 
-            <<< "Score.play():", "\n\t", "Playing movement ", i, " for a duration of ", movementDuration, "\n\t", "now: ", now >>>;
+            <<< "Score.play():", "\n\t", "Playing movement", i, "for a duration of", movementDuration, "\n\t", "now:", now >>>;
             spork ~ _movements[i].play();
             movementDuration => now;
         }
