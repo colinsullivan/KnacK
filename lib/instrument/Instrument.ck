@@ -58,13 +58,55 @@ public class Instrument extends UGen {
     }
 
     /**
-     *  Abstract method for setting frequency value.
+     *  Current frequency of this instrument.  Presumably
+     *  for the next note.
+     **/
+    float _freq;
+
+    /**
+     *  Getter and setter for frequency value.
      *
      *  @param  aFrequency  Frequency value to use.
      **/
     fun float freq(float aFrequency) {
-        Helpers.abstract_error("Instrument", "freq(float)");
-        return -1.0;
+        aFrequency => this._freq;
+        return this.freq();
+    }
+    fun float freq() {
+        return this._freq;
+    }
+
+    /**
+     *  Begin playing note.
+     **/
+    fun void noteOn() {
+        Helpers.abstract_error("Instrument", "noteOn()");
+        return;
+    }
+    fun void noteOn(float aVelocity) {
+        Helpers.abstract_error("Instrument", "noteOn(float)");
+        return;
+    }
+
+    /**
+     *  Stop playing note.
+     **/
+    fun void noteOff() {
+        Helpers.abstract_error("Instrument", "noteOff()");
+        return;
+    }
+    fun void noteOff(float aVelocity) {
+        Helpers.abstract_error("Instrument", "noteOff(float)");
+        return;
+    }
+
+    /**
+     *  TODO: Should these be in player?  If they have to do with time?
+     **/
+
+    dur _duration;
+    fun float duration(dur aDuration) {
+        aDuration => _duration;
     }
 
     /**
@@ -72,7 +114,7 @@ public class Instrument extends UGen {
      *
      *  @param  noteVelocity  The velocity to use.
      **/
-    fun void playNote(float noteVelocity) {
+    fun void playNote(float onVelocity) {
         Helpers.abstract_error("Instrument", "playNote(float)");
         return;
     }
