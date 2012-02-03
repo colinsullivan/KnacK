@@ -20,10 +20,9 @@ public class Score {
      **/
     0::second => dur _duration;
 
-    float _bpm;
+    0 => float _bpm;
+    dur noteDurs[7];
     dur quarterNote;
-    dur eighthNote;
-    dur halfNote;
 
     /**
      *  List of movements in this piece.
@@ -78,18 +77,28 @@ public class Score {
         aBpm => _bpm;
 
         (1/_bpm)*1::minute => quarterNote;
-        quarterNote/2 => eighthNote;
-        quarterNote*2 => halfNote;
+
+        quarterNote*4 => noteDurs["1"] => noteDurs[0];
+        quarterNote*2 => noteDurs["1/2"] => noteDurs[1];
+        quarterNote => noteDurs["1/4"] => noteDurs[2];
+        quarterNote/2 => noteDurs["1/8"] => noteDurs[3];
+        quarterNote/4 => noteDurs["1/16"] => noteDurs[4];
+        quarterNote/8 => noteDurs["1/32"] => noteDurs[5];
+        quarterNote/16 => noteDurs["1/64"] => noteDurs[6];
 
         return _bpm;
     }
     // Default bpm
-    this.bpm(120);
+    // this.bpm(120);
 
     /**
      *  Determine if the movement durations are properly entered.
      **/
     fun void pre_play() {
+        // if(_bpm != 0 && _duration == 0::second) {
+        //     return;
+        // }
+
         0::samp => dur allDurations;
         for(0 => int i; i < _numMovements; i++) {
             _movements[i].duration() +=> allDurations;
