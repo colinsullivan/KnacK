@@ -227,7 +227,7 @@ public class Score {
         /**
          *  Time remaining in this movement.
          **/
-        fun dur remaining_time() {
+        fun dur remaining_duration() {
             _startTime+this.duration() => time endTime;
 
             return endTime-now;
