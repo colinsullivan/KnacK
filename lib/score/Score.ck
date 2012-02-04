@@ -21,7 +21,7 @@ public class Score {
     0::second => dur _duration;
 
     0 => float _bpm;
-    dur noteDurs[7];
+    dur noteDurations[7];
     dur quarterNote;
 
     /**
@@ -78,13 +78,13 @@ public class Score {
 
         (1/_bpm)*1::minute => quarterNote;
 
-        quarterNote*4 => noteDurs["1"] => noteDurs[0];
-        quarterNote*2 => noteDurs["1/2"] => noteDurs[1];
-        quarterNote => noteDurs["1/4"] => noteDurs[2];
-        quarterNote/2 => noteDurs["1/8"] => noteDurs[3];
-        quarterNote/4 => noteDurs["1/16"] => noteDurs[4];
-        quarterNote/8 => noteDurs["1/32"] => noteDurs[5];
-        quarterNote/16 => noteDurs["1/64"] => noteDurs[6];
+        quarterNote*4 => noteDurations["1"] => noteDurations[0];
+        quarterNote*2 => noteDurations["1/2"] => noteDurations[1];
+        quarterNote => noteDurations["1/4"] => noteDurations[2];
+        quarterNote/2 => noteDurations["1/8"] => noteDurations[3];
+        quarterNote/4 => noteDurations["1/16"] => noteDurations[4];
+        quarterNote/8 => noteDurations["1/32"] => noteDurations[5];
+        quarterNote/16 => noteDurations["1/64"] => noteDurations[6];
 
         return _bpm;
     }
