@@ -87,6 +87,10 @@ public class Instrument extends UGen {
         Helpers.abstract_error("Instrument", "noteOn(float)");
         return;
     }
+    fun void noteOn(float aVelocity, dur onDuration) {
+        Helpers.abstract_error("Instrument", "noteOn(float, dur)");
+        return;
+    }
 
     /**
      *  Stop playing note.
