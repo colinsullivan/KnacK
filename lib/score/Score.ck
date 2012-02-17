@@ -24,6 +24,16 @@ public class Score {
     dur noteDurations[7];
     dur quarterNote;
 
+    Event quarterNoteEvent;
+
+    fun void metroEvents() {
+        while(true) {
+            quarterNoteEvent.broadcast();
+            this.quarterNote => now;
+        }
+    }
+
+
     /**
      *  List of movements in this piece.
      **/
@@ -132,9 +142,15 @@ public class Score {
         }
 
         if(allDurations != this.duration()) {
-            <<< "\n", "ERROR: Durations of movements do not add up to score duration." >>>;
-            me.exit();
+            Helpers.error_message("Durations of movements do not add up to score duration.");
         }
+
+        if(_bpm == 0) {
+            Helpers.warning_message("Score bpm has not been set, metronome events will not be triggered.");
+        }
+
+        spork ~ metroEvents();
+
     }
 
 
@@ -175,8 +191,7 @@ public class Score {
 
         fun Score score() {
             if(this._score == null) {
-                <<< "\n", "ERROR: `Movement` has no `Score`.  Call `add_movement` on the score first." >>>;
-                me.exit();
+                Helpers.error_message("`Movement` has no `Score`.  Call `add_movement` on the score first.");
             }
             return _score;
         }
@@ -241,7 +256,7 @@ public class Score {
             this.score().duration() => dur scoreDuration;
 
             if(scoreDuration == 0::second) {
-                <<< "\n", "WARNING: Score duration is 0" >>>;
+                Helpers.warning_message("Score duration is 0");
             }
 
             scoreDuration*this._durationRatio => this._duration;
@@ -253,7 +268,7 @@ public class Score {
          **/
         fun void pre_play() {
             if(this.duration() == 0::second) {
-                <<< "\n", "ERROR: Duration of section is 0" >>>;
+                Helpers.error_message("Duration of section is 0");
                 return;
             }
 

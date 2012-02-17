@@ -133,7 +133,7 @@ public class Performer {
      **/
     fun void pre_play() {
         if(this.score() == null) {
-            <<< "\n", "Performer.ck:\tWARNING: No score to sync to.", "\n" >>>;
+            Helpers.warning_message("Performer has no score to sync to.");
             return;
         }
 

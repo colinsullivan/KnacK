@@ -26,10 +26,10 @@ else {
     "aesthetic/Happy.ck",
     "score/Score.ck",
     "instrument/Instrument.ck",
-    "instrument/BassBalls.ck",
-    "instrument/Bubbly.ck",
-    "performer/Performer.ck",
-    "performer/Arpeggiator.ck"
+    // "instrument/BassBalls.ck",
+    // "instrument/Bubbly.ck",
+    "performer/Performer.ck"
+    // "performer/Arpeggiator.ck"
 ] @=> string toLoad[];
 
 for(0 => int i; i < toLoad.size(); i++) {

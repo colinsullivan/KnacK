@@ -13,6 +13,14 @@
  **/
 public class Helpers {
     fun static void abstract_error(string className, string methodName) {
-        <<< "\n", "WARNING:\tAbstract method `"+className+"."+methodName+"` called.">>>;
+        Helpers.warning_message("Abstract method `"+className+"."+"methodName"+"` called.");
+    }
+
+    fun static void error_message(string msg) {
+        <<< "[KnacK]: ERROR: ", msg >>>;
+        Machine.crash();
+    }
+    fun static void warning_message(string msg) {
+        <<< "[KnacK]: WARNING: ", msg >>>;
     }
 }
