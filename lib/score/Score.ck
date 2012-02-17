@@ -80,26 +80,6 @@ public class Score {
         }
     }
 
-    /**
-     *  The time signature of the score.  Array contains numerator and denominator.
-     **/
-    float _timeSignature[2];
-    fun float[] time_signature(float numerator) {
-        return this.time_signature(numerator, 4);
-    }
-    fun float[] time_signature(float numerator, float denominator) {
-        numerator => _timeSignature[0];
-
-        // TODO: handle denominator
-        denominator => _timeSignature[1];
-
-        this._calculate_note_durations();
-
-        return _timeSignature;
-    }
-    // Default time signature is 4/4
-    this.time_signature(4, 4);
-
     fun float bpm() {
         return _bpm;
     }
@@ -114,13 +94,11 @@ public class Score {
     // this.bpm(120);
 
     /**
-     *  Should be called whenever time signature or bpm changes.
+     *  Should be called whenever bpm changes.
      **/
     fun void _calculate_note_durations() {
         (1/_bpm)*1::minute => quarterNote;
 
-        quarterNote*_timeSignature[0] => noteDurations["1"] => noteDurations[0];
-        quarterNote*(_timeSignature[0]/2) => noteDurations["1/2"] => noteDurations[1];
         quarterNote => noteDurations["1/4"] => noteDurations[2];
         quarterNote/2 => noteDurations["1/8"] => noteDurations[3];
         quarterNote/4 => noteDurations["1/16"] => noteDurations[4];
