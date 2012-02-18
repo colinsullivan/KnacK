@@ -24,12 +24,16 @@ public class Score {
     dur noteDurations[7];
     dur quarterNote;
 
-    Event quarterNoteEvent;
+    /**
+     *  One `Event` instance for each note duration, will be broadcasted
+     *  on each metronome "tick".
+     **/
+    Event @ metroEvents[7];
 
-    fun void metroEvents() {
+    fun void broadcastMetroEvents(int index) {
         while(true) {
-            quarterNoteEvent.broadcast();
-            this.quarterNote => now;
+            metroEvents[index].broadcast();
+            noteDurations[index] => now;
         }
     }
 
@@ -99,11 +103,26 @@ public class Score {
     fun void _calculate_note_durations() {
         (1/_bpm)*1::minute => quarterNote;
 
-        quarterNote => noteDurations["1/4"] => noteDurations[2];
-        quarterNote/2 => noteDurations["1/8"] => noteDurations[3];
-        quarterNote/4 => noteDurations["1/16"] => noteDurations[4];
-        quarterNote/8 => noteDurations["1/32"] => noteDurations[5];
-        quarterNote/16 => noteDurations["1/64"] => noteDurations[6];        
+        // Calculate note durations and store in array indexed by string and
+        // log base 2
+        quarterNote*4   => noteDurations["1"]       => noteDurations[0];
+        quarterNote*2   => noteDurations["1/2"]     => noteDurations[1];
+        quarterNote     => noteDurations["1/4"]     => noteDurations[2];
+        quarterNote/2   => noteDurations["1/8"]     => noteDurations[3];
+        quarterNote/4   => noteDurations["1/16"]    => noteDurations[4];
+        quarterNote/8   => noteDurations["1/32"]    => noteDurations[5];
+        quarterNote/16  => noteDurations["1/64"]    => noteDurations[6];
+
+        // Instantiate event object for each note duration so we can 
+        // broadcast metronome events
+        Event e   @=> metroEvents["1"]    @=> metroEvents[0];
+        Event f   @=> metroEvents["1/2"]  @=> metroEvents[1];
+        Event g   @=> metroEvents["1/4"]  @=> metroEvents[2];
+        Event h   @=> metroEvents["1/8"]  @=> metroEvents[3];
+        Event i   @=> metroEvents["1/16"] @=> metroEvents[4];
+        Event j   @=> metroEvents["1/32"] @=> metroEvents[5];
+        Event k   @=> metroEvents["1/64"] @=> metroEvents[6];
+
     }
 
     /**
@@ -127,7 +146,10 @@ public class Score {
             Helpers.warning_message("Score bpm has not been set, metronome events will not be triggered.");
         }
 
-        spork ~ metroEvents();
+        // For each note duration, begin broadcasting events on metronome ticks.
+        for(0 => int i; i < noteDurations.size(); i++) {
+            spork ~ broadcastMetroEvents(i);
+        }
 
     }
 
