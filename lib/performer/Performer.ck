@@ -129,6 +129,15 @@ public class Performer {
     }
 
     /**
+     *  Flag for helping to stop performers.
+     **/
+    false => int _playing;
+
+    fun int playing() {
+        return _playing;
+    }
+
+    /**
      *  Must be called before `play`.  HACK: Used instead of `super`.
      **/
     fun void pre_play() {
@@ -137,20 +146,10 @@ public class Performer {
             return;
         }
 
+        true => _playing;
+
         // Synchronize to score's quarter note
-        this.score().quarterNote => dur syncDuration;
-
-        // Time remaining until next quarter note
-        (now % syncDuration) => dur remainingTime;
-
-        // <<< "remainingTime:" >>>;
-        // <<< remainingTime >>>;
-
-        // If we're not directly on the quarter note
-        // boundary, we'll have to wait until the next one.
-        if(remainingTime != 0::second) {
-            syncDuration - remainingTime => now;
-        }
+        this.score().metroEvents["1/4"] => now;
     }
 
     /**
@@ -158,6 +157,10 @@ public class Performer {
      **/
     fun void play() {
         Helpers.abstract_error("Performer", "play");
+    }
+
+    fun void stop() {
+        false => _playing;
     }
 
     fun void _watch(Aesthetic a) {

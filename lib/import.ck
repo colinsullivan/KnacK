@@ -23,7 +23,7 @@ else {
 [
     "Helpers.ck",
     "aesthetic/Aesthetic.ck",
-    "aesthetic/Happy.ck",
+    // "aesthetic/Happy.ck",
     "score/Score.ck",
     "instrument/Instrument.ck",
     // "instrument/BassBalls.ck",
