@@ -50,7 +50,7 @@ public class Aesthetic extends Event {
      **/
     fun float value(float aValue) {
         aValue => _value;
-        this.broadcast();
+        spork ~ this.broadcast();
         return aValue;
     }
 }

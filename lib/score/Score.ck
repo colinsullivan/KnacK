@@ -21,14 +21,14 @@ public class Score {
     0::second => dur _duration;
 
     0 => float _bpm;
-    dur noteDurations[7];
+    dur noteDurations[8];
     dur quarterNote;
 
     /**
      *  One `Event` instance for each note duration, will be broadcasted
      *  on each metronome "tick".
      **/
-    Event @ metroEvents[7];
+    Event @ metroEvents[8];
 
     fun void broadcastMetroEvents(int index) {
         while(true) {
@@ -112,6 +112,7 @@ public class Score {
         quarterNote/4   => noteDurations["1/16"]    => noteDurations[4];
         quarterNote/8   => noteDurations["1/32"]    => noteDurations[5];
         quarterNote/16  => noteDurations["1/64"]    => noteDurations[6];
+        quarterNote/32  => noteDurations["1/128"]   => noteDurations[7];
 
         // Instantiate event object for each note duration so we can 
         // broadcast metronome events
@@ -122,6 +123,7 @@ public class Score {
         Event i   @=> metroEvents["1/16"] @=> metroEvents[4];
         Event j   @=> metroEvents["1/32"] @=> metroEvents[5];
         Event k   @=> metroEvents["1/64"] @=> metroEvents[6];
+        Event l   @=> metroEvents["1/128"]@=> metroEvents[7];
 
     }
 

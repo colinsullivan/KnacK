@@ -149,7 +149,7 @@ public class Performer {
         true => _playing;
 
         // Synchronize to score's quarter note
-        this.score().metroEvents["1/4"] => now;
+        // this.score().metroEvents["1/4"] => now;
     }
 
     /**
