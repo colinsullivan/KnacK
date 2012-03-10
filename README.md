@@ -57,7 +57,7 @@ public class DistortedKick extends Instrument {
 
     clip.read(sampleDirectory+"/DistortedKick.aif");
     clip.pos(clip.samples());
-    clip => outputsAll;
+    clip => this;
 
     fun void playNote(float onVelocity) {
         clip.pos(0);

@@ -16,47 +16,6 @@
  **/
 public class Instrument extends UGen {
 
-
-    /**
-     *  Amount of channels to use for this instrument
-     **/
-    dac.channels() => int mChannels;
-
-    /**
-     *  Master outputs for each channel will be Dyno's.
-     **/
-    Dyno @ outputs[];
-
-    /**
-     *  This gain goes to all outputs as a shortcut
-     **/
-    Gain outputsAll;
-
-    /**
-     *  Gain for each output will be the same.
-     *  (outputsAll.gain should always be 1 TODO: Make this happen)
-     **/
-    float _gain;
-
-    _initialize_audio();
-
-    /**
-     *  Change the overall gain of this instrument.
-     *
-     *  @param  aGain  The gain value [0.0 - 1.0]
-     **/
-    fun float gain(float aGain) {
-        aGain => _gain;
-        for(0 => int i; i < outputs.size(); i++) {
-            outputs[i].gain(_gain);
-        }
-        return _gain;
-    }
-
-    fun float gain() {
-        return _gain;
-    }
-
     /**
      *  Current frequency of this instrument.  Presumably
      *  for the next note.
@@ -149,27 +108,6 @@ public class Instrument extends UGen {
     fun void playNote(float onVelocity, dur onDuration, float offVelocity, dur offDuration) {
         Helpers.abstract_error("Instrument", "playNote(float, dur, float, dur)");
         return;
-    }
-
-    /**
-     *  Create a `Dyno` object for each output channel.
-     **/
-    fun void _initialize_audio() {
-        // Create `Dyno` objects for each output channel
-        Dyno outputs[mChannels] @=> this.outputs;
-
-        // For each output channel
-        for(0 => int i; i < mChannels; i++) {
-            // Turn limiter on
-            outputs[i].limit();
-
-            // Connect to proper dac channel
-            outputs[i] => dac.chan(i);
-
-            outputsAll => outputs[i];
-        }
-
-        this.gain(1.0);
     }
 
     /**

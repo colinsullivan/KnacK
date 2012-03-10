@@ -34,7 +34,7 @@ public class Bell extends Instrument {
     frequencyModulator.freq(10);
 
     // Delay
-    // DelayA delay => outputsAll;
+    // DelayA delay => this;
     // delay.max(10::second);
     // delay.delay(1::second);
 
@@ -46,8 +46,8 @@ public class Bell extends Instrument {
     // Gain partialTremolo[8];
 
     for(0 => int i; i < partials.size(); i++) {
-    //     // partials[i] => partialTremolo[i] => outputsAll;
-        partials[i] => outputsAll;
+    //     // partials[i] => partialTremolo[i] => this;
+        partials[i] => this;
     //     // partials[i] => delay;
         
     //     ((partials.size()$float/i$float)/partials.size()$float)*(1/partials.size()) => partialGain[i];
@@ -58,7 +58,7 @@ public class Bell extends Instrument {
     }
     // 1.0 => partialGain[0];
 
-    outputsAll.gain(0.125);
+    this.gain(0.125);
 
     // Amplitude modulation
     // SinOsc tremolo => blackhole;
